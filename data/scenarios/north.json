@@ -1,0 +1,34 @@
+{
+  "id": "north",
+  "order": 1,
+  "title": "الممر الشمالي",
+  "brief": "مستودع واحد وثلاثة أحياء. الحاجز 12 يفتح من الثامنة حتى الواحدة. الطرق الالتفافية أسرع لكنها أخطر.",
+  "days": 3,
+  "seed": 12,
+  "event_chance": 0.7,
+  "events": ["road_closed", "window_cut", "tension", "displacement", "donation", "escort", "hospital", "inspection"],
+  "start": {"fuel": 160, "trucks": 6, "truck_capacity": 100},
+  "resupply": {"fuel": 50, "food": 330, "med": 55},
+  "people_per_unit": {"food": 4, "med": 10},
+  "med_max_minutes": 240,
+  "nodes": [
+    {"id": "W1", "type": "warehouse", "name": "المستودع المركزي", "pos": [900, 330], "stock": {"food": 520, "med": 90}},
+    {"id": "X1", "type": "checkpoint", "name": "حاجز 12", "pos": [690, 330], "window": [480, 780]},
+    {"id": "J1", "type": "junction", "pos": [700, 110]},
+    {"id": "J2", "type": "junction", "pos": [700, 560]},
+    {"id": "D1", "type": "district", "name": "حي الزيتون", "pos": [200, 110], "demand": {"food": 150, "med": 20}},
+    {"id": "D2", "type": "district", "name": "حي النصر", "pos": [430, 320], "demand": {"food": 170, "med": 25}},
+    {"id": "D3", "type": "district", "name": "حي الشاطئ", "pos": [180, 540], "demand": {"food": 130, "med": 30}}
+  ],
+  "edges": [
+    {"a": "W1", "b": "X1", "time": 25, "risk": 0.03, "fuel": 3},
+    {"a": "X1", "b": "D2", "time": 45, "risk": 0.05, "fuel": 5},
+    {"a": "D2", "b": "D1", "time": 50, "risk": 0.07, "fuel": 5},
+    {"a": "D2", "b": "D3", "time": 55, "risk": 0.07, "fuel": 5},
+    {"a": "W1", "b": "J1", "time": 40, "risk": 0.13, "fuel": 5},
+    {"a": "J1", "b": "D1", "time": 90, "risk": 0.14, "fuel": 9},
+    {"a": "J1", "b": "D2", "time": 70, "risk": 0.12, "fuel": 7},
+    {"a": "W1", "b": "J2", "time": 35, "risk": 0.1, "fuel": 4},
+    {"a": "J2", "b": "D3", "time": 80, "risk": 0.08, "fuel": 8}
+  ]
+}

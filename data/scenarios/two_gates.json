@@ -1,0 +1,40 @@
+{
+  "id": "two_gates",
+  "order": 2,
+  "title": "بوابتان",
+  "brief": "مستودعان وأربعة أحياء خلف حاجزين بمواعيد مختلفة. حاجز البحر يفتح ثلاث ساعات فقط، والطريق الترابي طويل وخطِر.",
+  "days": 3,
+  "seed": 21,
+  "event_chance": 0.8,
+  "events": ["road_closed", "fuel_shortage", "window_cut", "tension", "displacement", "escort", "night_window", "hospital", "inspection", "fuel_trade"],
+  "start": {"fuel": 170, "trucks": 7, "truck_capacity": 90},
+  "resupply": {"fuel": 60, "food": 300, "med": 50},
+  "people_per_unit": {"food": 4, "med": 10},
+  "med_max_minutes": 240,
+  "nodes": [
+    {"id": "W1", "type": "warehouse", "name": "مستودع الشمال", "pos": [920, 120], "stock": {"food": 380, "med": 60}},
+    {"id": "W2", "type": "warehouse", "name": "مستودع الجنوب", "pos": [920, 540], "stock": {"food": 300, "med": 70}},
+    {"id": "X1", "type": "checkpoint", "name": "حاجز البحر", "pos": [700, 470], "window": [540, 720]},
+    {"id": "X2", "type": "checkpoint", "name": "حاجز الجسر", "pos": [680, 170], "window": [450, 840]},
+    {"id": "J1", "type": "junction", "pos": [520, 320]},
+    {"id": "D1", "type": "district", "name": "حي الكرامة", "pos": [250, 90], "demand": {"food": 140, "med": 20}},
+    {"id": "D2", "type": "district", "name": "حي الأمل", "pos": [380, 330], "demand": {"food": 160, "med": 25}},
+    {"id": "D3", "type": "district", "name": "حي الميناء", "pos": [180, 560], "demand": {"food": 120, "med": 35}, "deadline": 780},
+    {"id": "D4", "type": "district", "name": "حي التفاح", "pos": [120, 300], "demand": {"food": 100, "med": 15}}
+  ],
+  "edges": [
+    {"a": "W1", "b": "X2", "time": 30, "risk": 0.03, "fuel": 4},
+    {"a": "X2", "b": "D1", "time": 70, "risk": 0.07, "fuel": 7},
+    {"a": "X2", "b": "J1", "time": 50, "risk": 0.05, "fuel": 5},
+    {"a": "J1", "b": "D2", "time": 25, "risk": 0.03, "fuel": 3},
+    {"a": "D2", "b": "D4", "time": 45, "risk": 0.07, "fuel": 4},
+    {"a": "D1", "b": "D4", "time": 60, "risk": 0.08, "fuel": 5},
+    {"a": "W2", "b": "X1", "time": 40, "risk": 0.03, "fuel": 4},
+    {"a": "X1", "b": "D3", "time": 85, "risk": 0.08, "fuel": 8},
+    {"a": "X1", "b": "J1", "time": 45, "risk": 0.07, "fuel": 5},
+    {"a": "D3", "b": "D4", "time": 55, "risk": 0.1, "fuel": 5},
+    {"a": "W1", "b": "W2", "time": 60, "risk": 0.03, "fuel": 4},
+    {"a": "W2", "b": "D3", "time": 150, "risk": 0.2, "fuel": 12},
+    {"a": "W1", "b": "J1", "time": 120, "risk": 0.2, "fuel": 10}
+  ]
+}
