@@ -1,0 +1,39 @@
+{
+  "id": "cold_chain",
+  "order": 3,
+  "title": "سلسلة التبريد",
+  "brief": "الأدوية تتلف إذا بقيت على الطريق أكثر من ثلاث ساعات. الانتظار عند حاجز الوادي قد يكلّفك الدواء كله، والوقود قليل.",
+  "days": 3,
+  "seed": 33,
+  "event_chance": 0.7,
+  "events": ["road_closed", "fuel_shortage", "tension", "hospital", "escort", "night_window", "donation", "window_cut"],
+  "start": {"fuel": 120, "trucks": 6, "truck_capacity": 80},
+  "resupply": {"fuel": 45, "food": 220, "med": 110},
+  "people_per_unit": {"food": 3, "med": 12},
+  "med_max_minutes": 180,
+  "nodes": [
+    {"id": "W1", "type": "warehouse", "name": "مستودع الأدوية", "pos": [930, 320], "stock": {"food": 300, "med": 200}},
+    {"id": "X1", "type": "checkpoint", "name": "حاجز الوادي", "pos": [640, 320], "window": [480, 660]},
+    {"id": "J1", "type": "junction", "pos": [700, 90]},
+    {"id": "J2", "type": "junction", "pos": [700, 560]},
+    {"id": "J3", "type": "junction", "pos": [380, 200]},
+    {"id": "D1", "type": "district", "name": "مخيم الوادي", "pos": [120, 120], "demand": {"food": 80, "med": 50}},
+    {"id": "D2", "type": "district", "name": "حي الصمود", "pos": [330, 420], "demand": {"food": 100, "med": 45}},
+    {"id": "D3", "type": "district", "name": "حي البيارات", "pos": [130, 560], "demand": {"food": 90, "med": 40}},
+    {"id": "D4", "type": "district", "name": "حي الربيع", "pos": [450, 90], "demand": {"food": 70, "med": 30}}
+  ],
+  "edges": [
+    {"a": "W1", "b": "X1", "time": 30, "risk": 0.03, "fuel": 4},
+    {"a": "X1", "b": "D2", "time": 60, "risk": 0.05, "fuel": 6},
+    {"a": "X1", "b": "J3", "time": 50, "risk": 0.05, "fuel": 5},
+    {"a": "J3", "b": "D1", "time": 60, "risk": 0.07, "fuel": 6},
+    {"a": "J3", "b": "D4", "time": 25, "risk": 0.03, "fuel": 2},
+    {"a": "W1", "b": "J1", "time": 45, "risk": 0.12, "fuel": 6},
+    {"a": "J1", "b": "D4", "time": 70, "risk": 0.13, "fuel": 7},
+    {"a": "J1", "b": "D1", "time": 120, "risk": 0.16, "fuel": 13},
+    {"a": "W1", "b": "J2", "time": 40, "risk": 0.08, "fuel": 5},
+    {"a": "J2", "b": "D3", "time": 120, "risk": 0.1, "fuel": 11},
+    {"a": "J2", "b": "D2", "time": 80, "risk": 0.07, "fuel": 8},
+    {"a": "D2", "b": "D3", "time": 50, "risk": 0.07, "fuel": 5}
+  ]
+}

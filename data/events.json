@@ -1,0 +1,39 @@
+[
+  {"id": "road_closed", "title": "إغلاق طريق", "text": "انهيار في أحد الطرق. الطريق المغلق مرسوم بالرمادي على الخريطة اليوم.", "weight": 3,
+   "effect": {"close_random_edge": true, "days": 1}},
+  {"id": "fuel_shortage", "title": "شحّ في الوقود", "text": "كل شاحنة تستهلك وقوداً أكثر بنسبة 30% ليومين.", "weight": 2,
+   "effect": {"fuel_mult": 1.3, "days": 2}},
+  {"id": "window_cut", "title": "تقليص ساعات الحواجز", "text": "الحواجز تُغلق اليوم قبل موعدها بساعة ونصف.", "weight": 2,
+   "effect": {"window_cut": 90, "days": 1}},
+  {"id": "tension", "title": "توتر أمني", "text": "خطر الحوادث أعلى على كل الطرق اليوم.", "weight": 2,
+   "effect": {"risk_add": 0.12, "days": 1}},
+  {"id": "displacement", "title": "موجة نزوح", "text": "عائلات نازحة وصلت إلى أحد الأحياء، فزادت حاجته.", "weight": 2,
+   "effect": {"surge": {"food": 80, "med": 15}}},
+  {"id": "donation", "title": "شحنة تبرعات", "text": "وصلت شحنة إضافية إلى المستودع الرئيسي.", "weight": 1,
+   "effect": {"stock": {"food": 120, "med": 25}}},
+  {"id": "escort", "title": "عرض مرافقة أمنية", "text": "جهة محلية تعرض مرافقة القوافل اليوم، لكنها تحتاج شاحنتين من أسطولك.", "weight": 2,
+   "choices": [
+     {"label": "اقبل المرافقة", "hint": "خطر الحوادث ينخفض للنصف، وشاحنتان أقل اليوم", "effect": {"risk_mult": 0.5, "trucks": -2, "days": 1}, "values": {"safety": 1}},
+     {"label": "ارفض", "hint": "كل الشاحنات تبقى للمساعدات، والخطر كما هو", "effect": {}, "values": {"lives": 1}}
+   ]},
+  {"id": "night_window", "title": "تمديد ساعات الحاجز", "text": "يمكن تمديد فتح الحواجز ساعتين مساءً، لكن الطرق أخطر في العتمة.", "weight": 2,
+   "choices": [
+     {"label": "اقبل التمديد", "hint": "الحواجز مفتوحة ساعتين أكثر، والخطر أعلى قليلاً", "effect": {"window_extend": 120, "risk_add": 0.08, "days": 1}, "values": {"speed": 1}},
+     {"label": "ارفض", "hint": "المواعيد العادية والطرق أأمن", "effect": {}, "values": {"safety": 1}}
+   ]},
+  {"id": "hospital", "title": "نداء المستشفى", "text": "مستشفى في أحد الأحياء يطلب أولوية عاجلة: كل مساعدة تصله اليوم تنقذ ضعف الناس.", "weight": 2,
+   "choices": [
+     {"label": "أعطِ الأولوية للمستشفى", "hint": "الحي المحدد يحتاج دواءً أكثر، وكل ما يصله يُحسب مضاعفاً", "effect": {"urgent": true, "surge": {"med": 25}}, "values": {"lives": 1}},
+     {"label": "حافظ على التوزيع العادل", "hint": "لا تغيير: كل الأحياء بنفس الأولوية", "effect": {}, "values": {"fairness": 1}}
+   ]},
+  {"id": "inspection", "title": "طلب تفتيش مطوّل", "text": "الحاجز يطلب تفتيشاً دقيقاً لكل شاحنة.", "weight": 2,
+   "choices": [
+     {"label": "اقبل التفتيش", "hint": "انتظار 45 دقيقة عند كل حاجز، والطرق أأمن قليلاً", "effect": {"checkpoint_delay": 45, "risk_add": -0.05, "days": 1}, "values": {"safety": 1}},
+     {"label": "ارفض", "hint": "الحواجز تُغلق ساعتين أبكر اليوم", "effect": {"window_cut": 120, "days": 1}, "values": {"speed": 1}}
+   ]},
+  {"id": "fuel_trade", "title": "مقايضة وقود", "text": "تاجر يعرض وقوداً مقابل جزء من الغذاء في المستودع.", "weight": 1,
+   "choices": [
+     {"label": "قايض", "hint": "+40 وقود و −100 غذاء", "effect": {"fuel": 40, "stock": {"food": -100}}, "values": {"speed": 1}},
+     {"label": "ارفض", "hint": "الغذاء يبقى للناس", "effect": {}, "values": {"fairness": 1}}
+   ]}
+]
