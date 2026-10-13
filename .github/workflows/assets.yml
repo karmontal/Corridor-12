@@ -1,0 +1,35 @@
+name: Fetch assets
+
+# Downloads the Higgsfield art and sounds listed in tools/fetch_assets.sh and commits them to the same branch.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/fetch_assets.sh
+      - .github/workflows/assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tools
+        run: |
+          sudo apt-get update -q && sudo apt-get install -yq ffmpeg
+          python3 -m pip install --quiet pillow
+
+      - name: Download
+        run: bash tools/fetch_assets.sh
+
+      - name: Commit
+        run: |
+          git add assets/art assets/audio
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Fetch Higgsfield art and sounds"
+          git push
