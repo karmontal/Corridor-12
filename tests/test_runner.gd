@@ -26,6 +26,7 @@ func _ready() -> void:
 	_test_equity()
 	_test_events()
 	_test_full_playthroughs()
+	_test_assets()
 	await _test_ui_flow()
 	Progress.reset()
 	print("\n%d checks, %d failures" % [_checks, _failures])
@@ -235,6 +236,15 @@ func _test_full_playthroughs() -> void:
 		check(day1.lives >= 50.0, "%s: suggested plan reaches at least half the need on day one (%d%%)" % [id, day1.lives])
 
 
+## The Higgsfield files the screens ask for (tools/fetch_assets.sh); a typo here would fall back silently.
+func _test_assets() -> void:
+	for f in ["menu_bg.jpg", "map_bg.jpg", "event.jpg", "end_bg.jpg", "warehouse.png", "checkpoint.png", "district.png", "truck.png"]:
+		check(Art.texture(f) != null, "art %s loads" % f)
+	for k in ["tap", "engine", "load", "radio", "success", "alarm", "card", "stars", "music_plan", "music_menu"]:
+		check(Sfx.stream(k) != null, "sound %s loads" % k)
+	check(Art.texture("missing.png") == null and Sfx.stream("missing") == null, "missing files are skipped")
+
+
 func _test_ui_flow() -> void:
 	var main := MAIN_SCENE.instantiate()
 	add_child(main)
@@ -246,6 +256,11 @@ func _test_ui_flow() -> void:
 	(menu.find_child("HowTo", true, false) as Button).pressed.emit()
 	check(menu.find_child("Help", true, false) != null, "how to play opens")
 	(menu.find_child("CloseHelp", true, false) as Button).pressed.emit()
+	var music_was: bool = Sfx.music_on
+	(menu.find_child("Music", true, false) as Button).pressed.emit()
+	check(Sfx.music_on != music_was, "music switch toggles")
+	(menu.find_child("Music", true, false) as Button).pressed.emit()
+	check(menu.find_child("Backdrop", true, false) != null, "menu shows its picture")
 	(menu.find_child("Play_north", true, false) as Button).pressed.emit()
 	await get_tree().process_frame
 	var game: Node = main.screen

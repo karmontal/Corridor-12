@@ -5,6 +5,7 @@ extends RefCounted
 const BG := Color("1b2129")
 const PANEL := Color("27303b")
 const PANEL_LIGHT := Color("33404e")
+const GLASS := Color(0.153, 0.188, 0.231, 0.86)  # PANEL, see-through over pictures
 const MAP_BG := Color("202832")
 const TEXT := Color("eef1f4")
 const MUTED := Color("9aa7b4")

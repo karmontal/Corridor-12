@@ -18,3 +18,7 @@
 - Before pushing run: `godot --headless --path . --import` then
   `godot --headless --path . res://tests/test_runner.tscn` (must exit 0).
 - App icon: `python3 tools/make_icon.py` (Pillow) writes `assets/icon/`.
+- Art and sound come from Higgsfield: `tools/fetch_assets.sh` lists the CDN files. The container cannot reach that CDN,
+  so the "Fetch assets" workflow (`assets.yml`) runs on a push that changes the script and commits `assets/art/`
+  and `assets/audio/`; pull before working on them. `Art` (scripts/ui/art.gd) loads pictures and `Sfx` (autoload)
+  plays sounds and music; both skip missing files, and `Sfx` stays silent in headless runs.

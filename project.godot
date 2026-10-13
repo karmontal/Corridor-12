@@ -22,6 +22,7 @@ config/quit_on_go_back=false
 [autoload]
 
 Progress="*res://scripts/progress.gd"
+Sfx="*res://scripts/sfx.gd"
 
 [display]
 

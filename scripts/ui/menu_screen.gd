@@ -1,9 +1,9 @@
 extends Screen
 ## Title, the scenario cards and how to play.
 
-const HOW_TO := """• اضغط مستودعاً (مربع أزرق) ثم حياً (دائرة) على الخريطة لتبني قافلة.
+const HOW_TO := """• اضغط مستودعاً ثم حياً على الخريطة لتبني قافلة.
 • اختر طريقة التوجيه: أسرع، متوازن، أو أأمن. لون الطريق يدل على خطره: أخضر آمن، أحمر خطِر.
-• الحواجز (معيّن برتقالي) لها ساعات فتح. إذا وصلت القافلة بعد الإغلاق تُعاد بحمولتها.
+• الحواجز لها ساعات فتح. إذا وصلت القافلة بعد الإغلاق تُعاد بحمولتها.
 • حدّد كمية الغذاء والدواء. كل شاحنة تحمل كمية محددة وتستهلك وقوداً.
 • اضغط «ابدأ اليوم» وتابع القوافل. كل صباح قد تصلك بطاقة حدث أو قرار صعب.
 • لوح الأثر يقيس أربعة أشياء: إنقاذ الأرواح، العدالة بين الأحياء، السرعة، والسلامة. لا يمكنك أن تكسبها كلها دائماً."""
@@ -12,6 +12,10 @@ var _overlay: Control
 
 
 func build() -> void:
+	Sfx.music("music_menu")
+	var bg := Art.backdrop("menu_bg.jpg", 0.4)
+	if bg != null:
+		add_child(bg)
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
@@ -32,15 +36,36 @@ func build() -> void:
 	col.add_child(cards)
 	for s in ScenarioData.load_all():
 		cards.add_child(_card(s))
+	var bottom := HBoxContainer.new()
+	bottom.add_theme_constant_override("separation", 24)
+	bottom.alignment = BoxContainer.ALIGNMENT_CENTER
+	col.add_child(bottom)
 	var help := UI.button("HowTo", "كيف ألعب؟")
 	help.custom_minimum_size.x = 360
-	help.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	help.pressed.connect(show_help)
-	col.add_child(help)
+	bottom.add_child(help)
+	var music := UI.button("Music", "", 26)
+	music.custom_minimum_size.x = 260
+	music.pressed.connect(func():
+		Sfx.set_music(not Sfx.music_on)
+		_audio_labels())
+	bottom.add_child(music)
+	var sounds := UI.button("Sounds", "", 26)
+	sounds.custom_minimum_size.x = 260
+	sounds.pressed.connect(func():
+		Sfx.set_sounds(not Sfx.sounds_on)
+		_audio_labels())
+	bottom.add_child(sounds)
+	_audio_labels()
+
+
+func _audio_labels() -> void:
+	find_child("Music", true, false).text = "الموسيقى: " + ("تعمل" if Sfx.music_on else "متوقفة")
+	find_child("Sounds", true, false).text = "المؤثرات: " + ("تعمل" if Sfx.sounds_on else "متوقفة")
 
 
 func _card(s: Dictionary) -> Control:
-	var card := UI.panel()
+	var card := UI.panel(UI.GLASS)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 14)

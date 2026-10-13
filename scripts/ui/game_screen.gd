@@ -34,10 +34,12 @@ var _convoys: VBoxContainer
 var _start: Button
 var _stance_buttons := {}
 var _end_clock := 0.0
+var _alarms: Array = []  # incident times still to sound during playback
 
 
 func build() -> void:
 	sim = Simulation.new(args.scenario, ScenarioData.load_events())
+	Sfx.music("music_plan")
 	var row := HBoxContainer.new()
 	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	row.add_theme_constant_override("separation", 0)
@@ -107,6 +109,7 @@ func _build_side(side: VBoxContainer) -> void:
 	var actions := HBoxContainer.new()
 	_add = UI.button("AddConvoy", "أضف القافلة", 28)
 	_add.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_add.set_meta("sfx", "load")
 	_add.pressed.connect(add_convoy)
 	actions.add_child(_add)
 	var suggest := UI.button("Suggest", "خطة مقترحة", 26)
@@ -119,6 +122,7 @@ func _build_side(side: VBoxContainer) -> void:
 	_start = UI.button("StartDay", "ابدأ اليوم", 32)
 	_start.add_theme_stylebox_override("normal", UI.box(UI.ACCENT.darkened(0.35), 14))
 	_start.add_theme_stylebox_override("hover", UI.box(UI.ACCENT.darkened(0.25), 14))
+	_start.set_meta("sfx", "engine")
 	_start.pressed.connect(func(): skip_playback() if playing else start_day())
 
 
@@ -148,6 +152,7 @@ func _stepper(parent: Control, key: String, on_step: Callable) -> Label:
 func select_node(id: String) -> void:
 	if playing or overlay != null:
 		return
+	Sfx.play("tap", -4.0)
 	match sim.graph.nodes[id].type:
 		"warehouse":
 			from_id = id
@@ -283,6 +288,10 @@ func show_event() -> void:
 	if e.is_empty():
 		return
 	var col := _open_overlay("EventCard")
+	Sfx.play("radio" if e.has("choices") else "card")
+	var banner := Art.banner("event.jpg", 220)
+	if banner != null:
+		col.add_child(banner)
 	col.add_child(UI.label("حدث اليوم %d" % sim.day, 26, UI.MUTED))
 	col.add_child(UI.label(e.title, 44, UI.ACCENT))
 	var text: String = e.text
@@ -321,8 +330,13 @@ func start_day(animate: bool = true) -> void:
 	playing = true
 	map.clock = Simulation.DAY_START
 	_end_clock = Simulation.DAY_START + 60.0
+	_alarms.clear()
 	for c in report.convoys:
 		_end_clock = maxf(_end_clock, c.points[-1].t + 30.0)
+		for p in c.points:
+			if c.incident_nodes.has(p.node):
+				_alarms.append(p.t)
+	_alarms.sort()
 	refresh()
 
 
@@ -330,6 +344,9 @@ func _process(delta: float) -> void:
 	if not playing:
 		return
 	map.clock += delta * PLAY_SPEED
+	while not _alarms.is_empty() and map.clock >= _alarms[0]:
+		_alarms.pop_front()
+		Sfx.play("alarm", -3.0)
 	_header.text = "اليوم %d · الساعة %s" % [sim.day, UI.clock(map.clock)]
 	map.queue_redraw()
 	if map.clock >= _end_clock:
@@ -351,6 +368,7 @@ func _finish_playback() -> void:
 
 func _show_report() -> void:
 	var col := _open_overlay("Report")
+	Sfx.play("success" if report.incidents == 0 and report.lives >= 60.0 else "card")
 	col.add_child(UI.label("تقرير اليوم %d" % report.day, 44, UI.ACCENT))
 	col.add_child(UI.label("وصل الدعم إلى %d شخص من %d يحتاجونه" % [report.people_reached, report.people_needed], 30))
 	col.add_child(UI.impact_board(report))

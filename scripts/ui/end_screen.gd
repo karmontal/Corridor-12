@@ -13,10 +13,15 @@ func build() -> void:
 	var s: Dictionary = args.scenario
 	var sum: Dictionary = args.summary
 	var new_best := Progress.record(s.id, sum.stars)
+	Sfx.music("music_menu")
+	Sfx.play("stars" if sum.stars > 0 else "card")
+	var bg := Art.backdrop("end_bg.jpg", 0.5)
+	if bg != null:
+		add_child(bg)
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	var card := UI.panel()
+	var card := UI.panel(UI.GLASS)
 	card.custom_minimum_size.x = 1200
 	center.add_child(card)
 	var col := VBoxContainer.new()
